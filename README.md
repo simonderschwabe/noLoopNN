@@ -46,23 +46,26 @@ On i7-8700:
 # Config Options
 
 can be set in the neural_network.h
-
-EPOCHS			- Number of Training Loops
-NUM_INPUTS		- Number of Input Neurons
-NUM_HIDDEN_NODES	- Number of Hidden Neurons
-NUM_OUTPUTS		- Number of Output Neurons
-NUM_TRAINING_SETS	- Number of Training Pairs
-SCALE_LIMIT		- Big Jumps between Training Inputs (aka 1 2 9 10) which should be defaulted 
-SCALE_DEFAULT		- Default value for the above
+```
+- EPOCHS		- Number of Training Loops
+- NUM_INPUTS		- Number of Input Neurons
+- NUM_HIDDEN_NODES	- Number of Hidden Neurons
+- NUM_OUTPUTS		- Number of Output Neurons
+- NUM_TRAINING_SETS	- Number of Training Pairs
+- SCALE_LIMIT		- Big Jumps between Training Inputs (aka 1 2 9 10) which should be defaulted 
+- SCALE_DEFAULT		- Default value for the above
+```
 
 # How it works in code
 
-	nn_read_train_file("nn_training_data.csv");
-    	nn_init();
-    	nn_train(0,EPOCHS-1);
-    	nn_save("trading_nn_train.net");
-	nn_load("trading_nn_train.net");
-    	*nn_result = nn_run(inputs,NUM_INPUTS);
+Include the header file include/neural_network.h into you code
+
+`nn_read_train_file("nn_training_data.csv");`
+`nn_init();`
+`nn_train(0,EPOCHS-1);`
+`nn_save("trading_nn_train.net");`
+`nn_load("trading_nn_train.net");`
+`*nn_result = nn_run(inputs,NUM_INPUTS);`
 
 Please free() the return Pointer from nn_run after usage to avoid memory getting full
 
@@ -76,10 +79,10 @@ this example
 
 12 Input Neurons/1 Output Neuron Pairs
 
-	-1 2 5 6 -6 -4 -2 1 2 3 4 5
-	1
-	2 3 4 5 6 7 8 3 4 6 7 8 
-	-1
+`-1 2 5 6 -6 -4 -2 1 2 3 4 5`
+`1`
+`2 3 4 5 6 7 8 3 4 6 7 8`
+`-1`
 
 # Status
 
