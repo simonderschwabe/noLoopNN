@@ -14,7 +14,6 @@
  */
 #include "stdio.h"
 #include <stdlib.h>
-#include "math.h"
 #include "stddef.h"
 #include "time.h"
 #include <dlfcn.h>
@@ -58,14 +57,22 @@ double t_output[NUM_TRAINING_SETS][NUM_OUTPUTS] = { {0.0f},{1.0f},{1.0f},{0.0f} 
 /******************************************************************
  * Function for Activation and the Derivative of it 
  ******************************************************************/
-double sigmoid(double x) { return 1 / (1 + exp(-x)); }
+double sigmoid(double x) { 
+	if(x> 8){return 0.999999;} 
+	if(x<-8){return 0.000001;} 
+	if(x> 6){return 0.998+(x*0.0001);}
+	if(x> 3.25){return 0.975+(x*0.0028);}
+	if(x>=0){return 0.5+((x*0.7777)-(x/1.5713));}
+	if(x< 0){return ((8+x)*(8+x))*0.0071;}
+	return 0.5;
+}
 double dSigmoid(double x) { return x * (1 - x); }
 
 /******************************************************************
  * Function for init between 0 and 1 
  ******************************************************************/
 double randx = 0.00001978f;
-double pseudo_number() { randx += 0.00000439f; if(randx>1){ randx=0; } return randx; }
+double pseudo_number() { randx += 0.00000009f; if(randx>=0.99999){ randx=0.00000009; } return randx; }
 
 /******************************************************************
  * Scale any Integer to range between 0 and 1
@@ -85,7 +92,7 @@ long getTimeStamp(){
 
         struct timespec _t;
         clock_gettime(CLOCK_REALTIME, &_t);
-        return  _t.tv_sec*1000 + lround(_t.tv_nsec/1.0e6);
+        return  _t.tv_sec*1000 + (_t.tv_nsec/1.0e6);
 }
 
 /******************************************************************
@@ -95,7 +102,6 @@ int nn_generate_training_code_header(FILE *src_file){
 
 	fprintf(src_file,"#include <stddef.h>\n");
 	fprintf(src_file,"#include <stdio.h>\n");
-	fprintf(src_file,"#include <math.h>\n");
 	fprintf(src_file,"#include \"include/neural_network.h\"\n");
 
 	fprintf(src_file,"extern double hiddenWeights[NUM_INPUTS][NUM_HIDDEN_NODES];\n");
@@ -287,7 +293,7 @@ int nn_gen_code_compile(){
 	int retcode = 0;
 	nn_generate_training_code(NN_GEN_FILENAME);
 
-	retcode = system("gcc -shared -Ofast -o nn_generated.so -fPIC nn_generated_train.c neural_network.c -lm");
+	retcode = system("clang -shared -Ofast -o nn_generated.so -fPIC nn_generated_train.c neural_network.c");
 
 	return retcode;
 }

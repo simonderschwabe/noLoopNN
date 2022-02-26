@@ -15,7 +15,7 @@ we give SCALE_LIMIT to filter out the max jumps in Training Data to get a nice
 even range from min to max values.
 
 Please be aware that as more neurons you configure as more RAM is needed for the
-compiling of the training with gcc. This is due to the large generated code files.
+compiling of the training with clang. This is due to the large generated code files.
 
 Most Network use random numbers to initialize there weights. In this case i use
 a constant + x as it gets the same good Training results as random number initialized
@@ -102,7 +102,7 @@ others may work, but have not been tested
 # Requirements
 
 ```
-gcc
+clang
 make
 (std lib)dlfcn.h
 (std lib)math.h

@@ -1,5 +1,5 @@
 default:
-	gcc -O3 -o test test_main.c neural_network.c -lm -ldl
+	clang -O3 -o test test_main.c neural_network.c -ldl
 	./test
 
 clean:
