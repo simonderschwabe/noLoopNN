@@ -6,4 +6,4 @@ clean:
 	rm nn_generated_train.c
 	rm *.so
 	rm test
-	rm nn_trained.nn
+	rm nn_trained.nn*

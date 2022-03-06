@@ -15,6 +15,7 @@
 #include "stdio.h"
 #include <stdlib.h>
 #include "stddef.h"
+#include "string.h"
 #include "time.h"
 #include <dlfcn.h>
 #include "include/neural_network.h"
@@ -86,6 +87,24 @@ double scale_to_zero_one(int input){
 }
 
 /******************************************************************
+ * Scale Int(char) to range between 0 and 1
+ ******************************************************************/
+double scale_text_to_zero_one(int input){
+	if(input >= 200){ return 0; }
+	else if(input <= 0){ return 0; }
+	return (((double)input)/(200));
+}
+
+/******************************************************************
+ * convert between 0 and 1 to char
+ ******************************************************************/
+char scale_zero_one_to_text(double input){
+	if(input >= 200) { return (char)32; }
+	if(input <= 0) { return (char)32; }
+	return (char)((int)((input*200)+0.1));
+}
+
+/******************************************************************
  * getTimeStamp for Measurement
  ******************************************************************/
 long getTimeStamp(){
@@ -93,6 +112,86 @@ long getTimeStamp(){
         struct timespec _t;
         clock_gettime(CLOCK_REALTIME, &_t);
         return  _t.tv_sec*1000 + (_t.tv_nsec/1.0e6);
+}
+
+/******************************************************************
+ * read text into training Input/Output from File 
+ ******************************************************************/
+void nn_read_train_text_file(const char* file_name)
+{
+	FILE* file = fopen (file_name, "r");
+	char c;
+	int cnt = 0;
+	unsigned int line_counter = 0;
+	unsigned int i_o_flag = 1;
+	int ret;
+
+	while (!feof (file) && line_counter < NUM_TRAINING_SETS)
+	{
+		ret = fscanf (file, "%c", &c);
+		if((int)c != 10){
+			if(i_o_flag == 1 && cnt < NUM_INPUTS){
+				t_input[line_counter][cnt]=scale_text_to_zero_one((int)c);
+			}
+			else if(i_o_flag == 0 && cnt < NUM_OUTPUTS){
+				t_output[line_counter][cnt]=scale_text_to_zero_one((int)c);
+			}
+			cnt++;
+		}
+		else if((int)c == 10) {
+			cnt = 0;
+			if(i_o_flag == 1) { i_o_flag = 0; }
+			else { i_o_flag = 1; line_counter++; }
+		}
+	}
+	fclose (file);
+	printf("Read %i lines and %i I->O combinations from %s TrainingData file -> ReturnCode %i\n",line_counter*2,line_counter,file_name,ret);
+}
+
+/******************************************************************
+ * Convert Text into Double Array for NN Input
+ ******************************************************************/
+double *nn_text_to_input(const char *text){
+
+	size_t length = strlen(text);
+	double *input_array = malloc(sizeof(double)*length);
+
+	for(int i=0; i<length; i++){
+		*(input_array+i) = scale_text_to_zero_one((int)*(text+i));
+	}
+
+	return input_array;
+}
+
+/******************************************************************
+ * Convert NN Output to readable Text
+ ******************************************************************/
+char *nn_output_to_text(const double *output){
+
+	char *text_output = malloc(sizeof(char)*NUM_OUTPUTS);
+
+	for(int i = 0; i<NUM_OUTPUTS; i++){
+		*(text_output+i) = scale_zero_one_to_text(*(output+i));
+	}
+
+	return text_output;
+}
+
+/******************************************************************
+ * Run NN on Text
+ ******************************************************************/
+char *nn_run_text(char *text){
+
+	printf("nn_r: %s\n",text);
+	double *input = nn_text_to_input(text);
+	size_t input_legth = strlen(text);
+	double *output = nn_run(input,input_legth);
+	char *str = nn_output_to_text(output);
+
+	free(input);
+	free(output);
+
+	return str;
 }
 
 /******************************************************************

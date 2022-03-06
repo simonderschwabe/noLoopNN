@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 #include "include/neural_network.h"
 
 /******************************************************************
@@ -14,7 +15,6 @@ int main(){
     printf("NUM_OUTPUTS %i\n",NUM_OUTPUTS);
     printf("NUM_TRAINING_SETS %i\n",NUM_TRAINING_SETS);
     printf("EPOCHS %i\n",EPOCHS);
-    printf("PARALLEL_TASKS %i\n",PARALLEL_TASKS);
     printf("SCALE_LIMIT %i\n",SCALE_LIMIT);
     printf("SCALE_DEFAULT %f\n",SCALE_DEFAULT);
 
@@ -71,5 +71,37 @@ int main(){
     double ua12[NUM_INPUTS] = {1,1,1,1,1,1,1,1,1,1,1,1};
     printf("1,1 = \t%lf\n",*(nn_run(ua12,NUM_INPUTS)));
 
+    printf("********************************************************\n");
+    printf("** Init & Read Traing Set & Unit Test -> TEXT Mode *****\n");
+    printf("********************************************************\n");
+
+    nn_init();
+    nn_read_train_text_file("data/training.txt");
+
+    assert(0 == scale_text_to_zero_one(201));
+    assert(0 == scale_text_to_zero_one(-5));
+    assert(0.5 == scale_text_to_zero_one(100));
+    assert('w' == scale_zero_one_to_text(scale_text_to_zero_one(119)));
+    assert('?' == scale_zero_one_to_text(scale_text_to_zero_one(63)));
+
+    printf("********************************************************\n");
+    printf("** Train NN & Save & Load ******************************\n");
+    printf("********************************************************\n");
+
+    nn_train(0,EPOCHS);
+    nn_save("nn_trained.nn2");
+    nn_load("nn_trained.nn2");
+
+    printf("********************************************************\n");
+    printf("** evaluate ********************************************\n");
+    printf("********************************************************\n");
+    char *str = nn_run_text("wie heisst du ?");
+    printf("main: %s\n",str);
+    str = nn_run_text("wie heist du ?");
+    printf("main: %s\n",str);
+    str = nn_run_text("was bist du ?");
+    printf("main: %s\n",str);
+    str = nn_run_text("was bisst du ?");
+    printf("main: %s\n",str);
     return 0;
 }
