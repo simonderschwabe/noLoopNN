@@ -11,8 +11,8 @@ use a code generator and compile/load the (no Loop) generated training code
 at runtime.
 
 Internaly the Network scales the Training Data into 0-1 Ranges. This is why
-we give SCALE_LIMIT to filter out the max jumps in Training Data to get a nice
-even range from min to max values.
+we give SCALE_LIMIT to filter out the max jumps in Training Data in non Text Mode
+to get a nice even range from min to max values.
 
 Please be aware that as more neurons you configure as more RAM is needed for the
 compiling of the training with clang. This is due to the large generated code files.
@@ -71,7 +71,13 @@ nn_load("trading_nn_train.net");
 *nn_result = nn_run(inputs,NUM_INPUTS);
 ```
 
-Please free() the return Pointer from nn_run after usage to avoid memory getting full
+in text mode use this:
+```
+nn_read_train_text_file("data/training.txt");
+*nn_result = nn_run_text("Ask your Network something");
+```
+
+Please free() the return Pointer from nn_run* after usage to avoid memory getting full
 
 # Examples
 
@@ -88,6 +94,14 @@ this example
 1
 2 3 4 5 6 7 8 3 4 6 7 8
 -1
+```
+
+in text mode it looks like this:
+```
+Whats your Name?
+SimonsAI
+Whats your Task?
+Answer Questions
 ```
 
 # Status
