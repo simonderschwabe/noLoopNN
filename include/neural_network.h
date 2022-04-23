@@ -20,16 +20,22 @@
 #define NN_GEN_LIBNAME "nn_generated.so"
 
 #ifndef EPOCHS
-	#define EPOCHS 400000
+	#define EPOCHS 250000
 #endif
 #ifndef NUM_INPUTS
-	#define NUM_INPUTS 25
+	#define NUM_INPUTS 16
 #endif
 #ifndef NUM_HIDDEN_NODES
-	#define NUM_HIDDEN_NODES 37
+	#define NUM_HIDDEN_NODES 17
+#endif
+#ifndef NUM_LAYER
+	#define NUM_LAYER 6
 #endif
 #ifndef NUM_OUTPUTS
 	#define NUM_OUTPUTS 16
+#endif
+#ifndef ADJ_RATE
+	#define ADJ_RATE 0.1f
 #endif
 #ifndef NUM_TRAINING_SETS
 	#define NUM_TRAINING_SETS 12
