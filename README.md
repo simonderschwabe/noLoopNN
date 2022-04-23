@@ -18,7 +18,7 @@ Please be aware that as more neurons you configure as more RAM is needed for the
 compiling of the training with clang. This is due to the large generated code files.
 
 Most Network use random numbers to initialize there weights. In this case i use
-a constant + x as it gets the same good Training results as random number initialized
+mersenne twister as it gets the same good Training results as random number initialized
 weights. Also due to this fact, if network ist trained with same training data and 
 input parameters you also get the same training result. Which means repeatable training
 results.
@@ -49,11 +49,13 @@ On i7-8700:
 
 can be set in the neural_network.h
 ```
-EPOCHS		- Number of Training Loops
+EPOCHS			- Number of Training Loops
 NUM_INPUTS		- Number of Input Neurons
 NUM_HIDDEN_NODES	- Number of Hidden Neurons
+NUM_LAYER		- Number of Hidden Layers
 NUM_OUTPUTS		- Number of Output Neurons
 NUM_TRAINING_SETS	- Number of Training Pairs
+ADJ_RATE		- Adjustment Rate of the Network during Training
 SCALE_LIMIT		- Big Jumps between Training Inputs (aka 1 2 9 10) which should be defaulted 
 SCALE_DEFAULT		- Default value for the above
 ```
@@ -117,7 +119,7 @@ others may work, but have not been tested
 
 ```
 clang
-make
+ninja build
 (std lib)dlfcn.h
 (std lib)math.h
 (std lib)time.h
@@ -128,9 +130,14 @@ make
 run on commandline
 
 ```
-make
+ninja
+./test
 ```
 
 # License
 
 Apache License, Version 2.0
+
+# External Code
+
+Copyright of Mersenne Twister is at https://github.com/ESultanik/mtwister
