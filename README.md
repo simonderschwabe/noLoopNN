@@ -84,8 +84,8 @@ Please free() the return Pointer from nn_run* after usage to avoid memory gettin
 # Examples
 
 The main() function in test_main.c contains an simple XOR example 
-which should explain how to use the Neural Network in practice. Also the "make" command runs
-this example 
+which should explain how to use the Neural Network in practice.
+See build section.
 
 # Example Training Data file
 
