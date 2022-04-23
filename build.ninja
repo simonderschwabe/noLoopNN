@@ -1,0 +1,15 @@
+cflags = -ansi -pedantic -Wall -O3 -std=gnu99 -march=native -Wextern-initializer
+lflags = -lm
+lmodules = -ldl
+
+rule cc
+  command = mkdir -p build && clang $cflags -c $in -o $out
+
+rule ll
+  command = clang -o $out $in $lflags $lmodules
+
+build build/test_main.o: cc test_main.c
+build build/tiny_mt.o: cc tiny_mt.c
+build build/neural_network.o: cc neural_network.c
+
+build test: ll build/tiny_mt.o build/neural_network.o build/test_main.o
